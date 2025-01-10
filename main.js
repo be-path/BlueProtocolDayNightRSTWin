@@ -22,6 +22,17 @@ function debounce(func, wait) {
 }
 
 app.on("ready", async () => {
+    const exePath = app.getPath("exe");
+
+    // 開発環境ではスタートアップ登録をスキップ
+    if (!exePath.includes("electron.exe")) {
+		// スタートアップに登録
+		app.setLoginItemSettings({
+			openAtLogin: true,
+			path: exePath, // ビルド済みアプリの実行ファイルを登録
+		});
+    }
+
 	const windowBounds = store.get("windowBounds", {
 		width: 200,
 		height: 200,
