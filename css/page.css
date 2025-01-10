@@ -1,0 +1,93 @@
+:root {
+	--color-fg: hsla(0, 0%, 100%, 100%);
+	--color-bg: hsla(0, 0%, 0%, 25%);
+	--size: min(100vw, 100vh);
+	--chart-size: 90%;
+	--chart-inner-size: 65%; /* 注意：中央から矩形頂点までの割合 */
+	--icon-size: 90%;
+}
+
+body {
+	margin: 0;
+	overflow: hidden;
+	width: 100vw;
+	height: 100vh;
+	-webkit-app-region: drag;  /* ドラッグ可能にする */
+}
+
+#trayIconCanvas {
+	display: none;
+}
+
+#content {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.clock {
+	--time-ratio: 100;
+	--time-is-day: 1;
+	position: relative;
+	width: var(--size);
+	height: var(--size);
+}
+.clock > * {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.clock .background {
+	width: 100%;
+	height: 100%;
+	border-radius: 100%;
+	background-color: var(--color-bg);
+}
+
+.clock .chart {
+	border-radius: 50%;
+	width: var(--chart-size);
+	height: var(--chart-size);
+	background-image: conic-gradient(
+		var(--color-fg) 0,
+		var(--color-fg) calc(var(--time-ratio) * 1%),
+		transparent calc(var(--time-ratio) * 1%),
+		transparent 100%
+	);
+	
+	-webkit-mask-image: radial-gradient(
+		transparent 0%,
+		transparent var(--chart-inner-size),
+		white var(--chart-inner-size),
+		white 100%
+	);
+	
+	mask-image: radial-gradient(
+		transparent 0%,
+		transparent var(--chart-inner-size),
+		white var(--chart-inner-size),
+		white 100%
+	);
+}
+
+.clock .icon {
+	width: 100%;
+}
+.clock .icon > * {
+	position: absolute;
+	width: var(--icon-size);
+	aspect-ratio: 1;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+.clock .icon .icon_day {
+	opacity: calc(var(--time-is-day));
+}
+.clock .icon .icon_night {
+	opacity: calc(1 - var(--time-is-day));
+}
