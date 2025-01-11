@@ -39,6 +39,7 @@ app.on("ready", async () => {
 		x: undefined,
 		y: undefined
 	});
+	isAlwaysOnTop = store.get("windowAlwaysOnTop", isAlwaysOnTop);
 
 	mainWindow = new BrowserWindow({
 		width: windowBounds.width,
@@ -92,10 +93,11 @@ app.on("ready", async () => {
 	const updateContextMenu = () => {
 		const contextMenu = Menu.buildFromTemplate([
 			{
-				label: isAlwaysOnTop ? "最前面を解除" : "最前面に表示",
+				label: isAlwaysOnTop ? "最前面：OFF - <ON>" : "最前面：<OFF> - ON",
 				click: () => {
 					isAlwaysOnTop = !isAlwaysOnTop;
 					mainWindow.setAlwaysOnTop(isAlwaysOnTop);
+					store.set("windowAlwaysOnTop", isAlwaysOnTop);
 					updateContextMenu();
 				},
 			},
