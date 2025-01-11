@@ -1,7 +1,8 @@
-import { app, BrowserWindow, Tray, Menu, ipcMain, nativeImage  } from "electron";
+import { app, BrowserWindow, Tray, Menu, ipcMain, nativeImage, dialog, shell  } from "electron";
 import Store from "electron-store";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
+import packageJson from "./package.json" with { type: "json" };
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -11,6 +12,22 @@ let tray;
 let isAlwaysOnTop = true; // 初期状態: 最前面表示
 
 const store = new Store();
+
+const TIMEOUT_WINDOW_BACKGROUND = 2000;
+const TIMEOUT_DEBOUNCE = 500;
+
+const COLOR_TRANSPARENT = "#00000000";
+const COLOR_WINDOW_MOVING = "#11FFFFFF";
+
+const LABEL_ALWAYS_ON_TOP_ON = "最前面：OFF - <ON>";
+const LABEL_ALWAYS_ON_TOP_OFF = "最前面：<OFF> - ON";
+const LABEL_UPDATE_INFO = "アップデート情報";
+const LABEL_ABOUT = "作成元情報";
+const LABEL_EXIT = "終了";
+const LABEL_OK = "OK";
+const TEXT_BP_COPYRIGHT = "BLUE PROTOCOL ©2019 Bandai Namco Online Inc. ©2019 Bandai Namco Studios Inc.";
+
+const MEDIA_ICON_TRAY_DEFAULT = "day.png";
 
 function debounce(func, wait) {
 	let timeout;
@@ -22,16 +39,16 @@ function debounce(func, wait) {
 }
 
 app.on("ready", async () => {
-    const exePath = app.getPath("exe");
+	const exePath = app.getPath("exe");
 
-    // 開発環境ではスタートアップ登録をスキップ
-    if (!exePath.includes("electron.exe")) {
+	// 開発環境ではスタートアップ登録をスキップ
+	if (!exePath.includes("electron.exe")) {
 		// スタートアップに登録
 		app.setLoginItemSettings({
 			openAtLogin: true,
-			path: exePath, // ビルド済みアプリの実行ファイルを登録
+			path: exePath, // ビルド済みアプリの実行ファイル
 		});
-    }
+	}
 
 	const windowBounds = store.get("windowBounds", {
 		width: 200,
@@ -51,9 +68,9 @@ app.on("ready", async () => {
 		skipTaskbar: true,
 		alwaysOnTop: isAlwaysOnTop,
 		webPreferences: {
-			nodeIntegration: true,  // Node.js 統合を無効化
-			contextIsolation: false,  // レンダラープロセスの隔離
-			devTools: false,         // 開発者ツールを無効化
+			nodeIntegration: true,
+			contextIsolation: false,
+			devTools: false,
 		},
 	});
 
@@ -63,28 +80,26 @@ app.on("ready", async () => {
 	const saveBounds = debounce(() => {
 		const bounds = mainWindow.getBounds();
 		store.set("windowBounds", bounds);
-	}, 500);
+	}, TIMEOUT_DEBOUNCE);
 
-	mainWindow.on("move", () => {
-		mainWindow.setBackgroundColor("#11FFFFFF"); // 背景色を設定して枠を表示
+	let resizeTimeout;
+	function showWindowBackground() {
+		mainWindow.setBackgroundColor(COLOR_WINDOW_MOVING);
 
-		// リサイズ終了後の処理（300ms後に透明に戻す）
+		// 一定時間経過後に透明に戻す
 		clearTimeout(resizeTimeout);
 		resizeTimeout = setTimeout(() => {
-			mainWindow.setBackgroundColor("#00000000"); // 完全に透明に戻す
-		}, 2000);
+			mainWindow.setBackgroundColor(COLOR_TRANSPARENT);
+		}, TIMEOUT_WINDOW_BACKGROUND);
+	}
+
+	mainWindow.on("move", () => {
+		showWindowBackground();
 		saveBounds();
 	});
 
-	let resizeTimeout;
 	mainWindow.on("resize", () => {
-		mainWindow.setBackgroundColor("#11FFFFFF"); // 背景色を設定して枠を表示
-
-		// リサイズ終了後の処理（300ms後に透明に戻す）
-		clearTimeout(resizeTimeout);
-		resizeTimeout = setTimeout(() => {
-			mainWindow.setBackgroundColor("#00000000"); // 完全に透明に戻す
-		}, 2000);
+		showWindowBackground();
 		saveBounds();
 	});
 
@@ -93,16 +108,33 @@ app.on("ready", async () => {
 	const updateContextMenu = () => {
 		const contextMenu = Menu.buildFromTemplate([
 			{
-				label: isAlwaysOnTop ? "最前面：OFF - <ON>" : "最前面：<OFF> - ON",
+				label: isAlwaysOnTop ? LABEL_ALWAYS_ON_TOP_ON : LABEL_ALWAYS_ON_TOP_OFF,
 				click: () => {
 					isAlwaysOnTop = !isAlwaysOnTop;
 					mainWindow.setAlwaysOnTop(isAlwaysOnTop);
 					store.set("windowAlwaysOnTop", isAlwaysOnTop);
 					updateContextMenu();
 				},
-			},
-			{
-				label: "終了",
+			}, {
+				type: "separator"
+			}, {
+				label: LABEL_UPDATE_INFO,
+				click: () => {
+					shell.openExternal(packageJson.homepage);
+				},
+			}, {
+				label: LABEL_ABOUT,
+				click: () => {
+					dialog.showMessageBox({
+						type: "info",
+						title: LABEL_ABOUT,
+						message: packageJson.message,
+						detail: `${packageJson.longName} ver. ${packageJson.version}\n作者：${packageJson.author} X${packageJson.twitter}\n${TEXT_BP_COPYRIGHT}`,
+						buttons: [LABEL_OK],
+					});
+				},
+			}, {
+				label: LABEL_EXIT,
 				click: () => {
 					app.quit();
 				},
@@ -110,10 +142,10 @@ app.on("ready", async () => {
 		]);
 		tray.setContextMenu(contextMenu);
 	};
- 
-	const iconPath = join(__dirname, "media", "day.png");
+
+	const iconPath = join(__dirname, "media", MEDIA_ICON_TRAY_DEFAULT);
 	tray = new Tray(iconPath);
-	tray.setToolTip("BLUE PROTOCOL Day Night Widget (Regnas Standard Time)");
+	tray.setToolTip(packageJson.shortName);
 	updateContextMenu()
 
 	ipcMain.on("update-tray-icon", (event, imageData) => {

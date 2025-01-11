@@ -1,46 +1,51 @@
 {
-  "type": "module",
-  "name": "bpdaynightrst",
-  "version": "1.0.2",
-  "main": "main.js",
-  "scripts": {
-    "start": "electron .",
-    "build": "electron-builder"
-  },
-  "keywords": [],
-  "author": "Nal",
-  "license": "ISC",
-  "description": "BLUE PROTOCOL Day Night Widget (Regnas Standard Time)",
-  "devDependencies": {
-    "@electron/fuses": "^1.8.0",
-    "electron-builder": "^25.1.8",
-    "electron": "^33.3.1"
-  },
-  "dependencies": {
-    "electron-squirrel-startup": "^1.0.1",
-    "electron-store": "^10.0.0"
-  },
-  "build": {
-    "productName": "BPDayNightRST",
-    "appId": "com.be-path.bpdaynightrst",
-    "directories": {
-      "output": "dist"
-    },
-    "files": [
-      "**/*"
-    ],
-    "win": {
-      "target": "nsis",
-      "icon": "media/day.ico"
-    },
-    "nsis": {
-      "installerIcon": "media/day.ico",
-      "uninstallerIcon": "media/day.ico",
-      "installerHeaderIcon": "media/day.ico",
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
-      "deleteAppDataOnUninstall": true,
-      "include": "build/installer.nsh"
-    }
-  }
+	"type": "module",
+	"name": "bpdaynightrst",
+	"shortName": "BPDayNightRST",
+	"longName": "BLUE PROTOCOL Day Night Widget (Regnas Standard Time)",
+	"version": "1.0.3",
+	"homepage": "https://note.com/be_path/n/ndb414fa1d29f",
+	"twitter": "@nal_rtd",
+	"message": "どうかレグナスがみなさんの中で美しく回り続けますように",
+	"main": "main.js",
+	"scripts": {
+		"start": "electron .",
+		"build": "electron-builder"
+	},
+	"keywords": [],
+	"author": "Nal（ルミナ@ブルプロ）",
+	"license": "ISC",
+	"description": "BLUE PROTOCOL Day Night Widget (Regnas Standard Time)",
+	"devDependencies": {
+		"@electron/fuses": "^1.8.0",
+		"electron-builder": "^25.1.8",
+		"electron": "^33.3.1"
+	},
+	"dependencies": {
+		"electron-squirrel-startup": "^1.0.1",
+		"electron-store": "^10.0.0"
+	},
+	"build": {
+		"productName": "BPDayNightRST",
+		"appId": "com.be-path.bpdaynightrst",
+		"directories": {
+			"output": "dist"
+		},
+		"files": [
+			"**/*"
+		],
+		"win": {
+			"target": "nsis",
+			"icon": "media/day.ico"
+		},
+		"nsis": {
+			"installerIcon": "media/day.ico",
+			"uninstallerIcon": "media/day.ico",
+			"installerHeaderIcon": "media/day.ico",
+			"oneClick": false,
+			"allowToChangeInstallationDirectory": true,
+			"deleteAppDataOnUninstall": true,
+			"include": "build/installer.nsh"
+		}
+	}
 }

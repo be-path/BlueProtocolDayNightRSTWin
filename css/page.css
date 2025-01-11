@@ -18,6 +18,9 @@ body {
 #trayIconCanvas {
 	display: none;
 }
+.trayIconImage {
+	display: none;
+}
 
 #content {
 	width: 100%;

@@ -1,3 +1,3 @@
 !macro customUnInstall
-    DeleteRegValue HKCU "Software\Microsoft\Windows\CurrentVersion\Run" "electron.app.BPDayNightRST"
+	DeleteRegValue HKCU "Software\Microsoft\Windows\CurrentVersion\Run" "electron.app.BPDayNightRST"
 !macroend
