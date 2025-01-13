@@ -59,8 +59,10 @@
 		});
 	}
 
-	setInterval(function() {
+	document.addEventListener("DOMContentLoaded", function() {
+		setInterval(function() {
+			drawClock();
+		}, 1000);
 		drawClock();
-	}, 1000);
-	drawClock();
+	});
 })();
