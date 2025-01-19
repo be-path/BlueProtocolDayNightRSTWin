@@ -158,12 +158,7 @@ app.on("ready", () => {
 		}, TIMEOUT_WINDOW_BACKGROUND);
 	}
 
-	mainWindow.on("focus", () => {
-		showWindowBackground();
-		saveBounds();
-	});
-
-	mainWindow.on("move", () => {
+	mainWindow.on("moved", () => {
 		adjustWindowPosition(mainWindow);
 		showWindowBackground();
 		saveBounds();
@@ -238,7 +233,7 @@ app.on("ready", () => {
 						type: "info",
 						title: LABEL_ABOUT,
 						message: packageJson.message,
-						detail: `${packageJson.longName} ver. ${packageJson.version}\n作者：${packageJson.author} X${packageJson.twitter}\n${TEXT_BP_COPYRIGHT}`,
+						detail: `${packageJson.longName} ver. ${packageJson.version}\n作者：${packageJson.author} (X${packageJson.twitter})\n${TEXT_BP_COPYRIGHT}`,
 						buttons: [LABEL_OK],
 					});
 				},
