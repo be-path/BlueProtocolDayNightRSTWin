@@ -46,6 +46,17 @@
 			"allowToChangeInstallationDirectory": true,
 			"deleteAppDataOnUninstall": true,
 			"include": "build/installer.nsh"
+		},
+		"mac": {
+			"category": "public.app-category.utilities",
+			"target": ["dmg", "zip"],
+			"icon": "media/day.png"
+		},
+		"linux": {
+			"target": ["AppImage", "deb"],
+			"icon": "media/day.png",
+			"category": "Utility",
+			"maintainer": "No Maintainer <no-reply@example.com>"
 		}
 	}
 }
