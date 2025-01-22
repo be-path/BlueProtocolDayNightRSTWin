@@ -11,16 +11,27 @@
 
 T.B.D.
 
-### Linux(Ubuntu)
+### Mac
 
-下記コマンドでビルドすると、distディレクトリ配下に `bpdaynightrst_x.x.x_amd64.deb` が生成されます。
+下記コマンドでビルドすると、 dist ディレクトリ配下に `BPDayNightRST-1.0.5-arm64.dmg` が生成されます。
 
 ```
 $ cd /path/to/bpdaynightrst
 $ npm run build
 ```
 
-生成されたdebファイルをインストールすることで、ウィジェットが使用可能になります。
+生成された dmg ファイルを Finder から実行し、アプリをインストールしてください。
+
+### Linux (Ubuntu)
+
+下記コマンドでビルドすると、 dist ディレクトリ配下に `bpdaynightrst_x.x.x_amd64.deb` が生成されます。
+
+```
+$ cd /path/to/bpdaynightrst
+$ npm run build
+```
+
+生成された deb ファイルをインストールすることで、ウィジェットが使用可能になります。
 
 ```
 $ sudo dpkg -i ./dist/bpdaynightrst_x.x.x_amd64.deb
