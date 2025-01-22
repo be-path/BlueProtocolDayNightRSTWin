@@ -13,7 +13,7 @@ T.B.D.
 
 ### Mac
 
-下記コマンドでビルドすると、 dist ディレクトリ配下に `BPDayNightRST-1.0.5-arm64.dmg` が生成されます。
+下記コマンドでビルドすると、 dist ディレクトリ配下に `BPDayNightRST-x.x.x-arm64.dmg` が生成されます。
 
 ```
 $ cd /path/to/bpdaynightrst
