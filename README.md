@@ -9,7 +9,16 @@
 
 ### Windows
 
-T.B.D.
+インストーラー `BPDayNightRST Setup x.x.x.exe` を実行し、アプリをインストールしてください。すでにアプリがインストールされている場合は上書きされます。
+
+あるいは、下記コマンドでビルドすると、 dist ディレクトリ配下に `BPDayNightRST Setup x.x.x.exe` が生成されます。
+
+```
+$ cd \path\to\bpdaynightrst
+$ npm run build
+```
+
+生成された exe ファイルをエクスプローラから実行し、アプリをインストールしてください。
 
 ### Mac
 

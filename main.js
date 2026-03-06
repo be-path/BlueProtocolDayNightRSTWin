@@ -106,6 +106,19 @@ function fixWindow(window, fix) {
 	`);
 }
 
+const gotTheLock = app.requestSingleInstanceLock();
+
+if (!gotTheLock) {
+	app.quit();
+} else {
+	app.on('second-instance', () => {
+		if (mainWindow) {
+			if (mainWindow.isMinimized()) mainWindow.restore();
+			mainWindow.focus();
+		}
+	});
+}
+
 app.on("ready", () => {
 	// リリース版の時にはスタートアップに登録
 	if (IS_RELEASE) {
@@ -121,6 +134,17 @@ app.on("ready", () => {
 		x: undefined,
 		y: undefined
 	});
+
+	// メインディスプレイと現在のディスプレイでスケーリングが異なる場合、ウィンドウサイズを調整する
+	const mainDisplayScale = screen.getPrimaryDisplay().scaleFactor;
+	const currentDisplayScale = screen.getDisplayMatching(windowBounds).scaleFactor;
+
+	if (currentDisplayScale > 0 && mainDisplayScale !== currentDisplayScale) {
+		const factor = mainDisplayScale / currentDisplayScale;
+		windowBounds.width = Math.round(windowBounds.width * factor);
+		windowBounds.height = Math.round(windowBounds.height * factor);
+	}
+
 	isAlwaysOnTop = store.get("windowAlwaysOnTop", isAlwaysOnTop);
 	isFixed = store.get("windowFixed", isFixed);
 	isHidden = store.get("windowHidden", isHidden);
@@ -140,6 +164,7 @@ app.on("ready", () => {
 			devTools: !IS_RELEASE,
 		},
 	});
+	adjustWindowPosition(mainWindow);
 
 	// デバウンス付きの保存処理
 	const saveBounds = debounce(() => {
